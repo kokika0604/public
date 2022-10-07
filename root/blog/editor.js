@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    let globalEditor;
-
     const watchdog = new CKSource.EditorWatchdog();
     window.watchdog = watchdog;
     watchdog.setCreator((element, config) => {
@@ -24,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     name: /^(html|head|body|frame|frameset|iframe|object|param|server|javascript|form|input|embed|textarea|script|meta|button|option|title)$/
                 });
 
-                globalEditor = editor;
+                window.editor = editor;
                 return editor;
             })
     });

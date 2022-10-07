@@ -119,6 +119,7 @@
                 <button class="submit submit__draft">下書き保存</button>
                 <button class="submit submit__post">投稿する</button>
             </div>
+            <p style="font-size: 0.8rem">※ボタンを押すとコンソールでフォームデーダを確認できます</p>
         </footer>
     </form>
 </main>
@@ -219,5 +220,18 @@
     </div>
 </div>
 
+<script>
+    $(() => {
+        $('.js-submit').click(() => {
+            const formData = new FormData($('form').get(0));
+            const result = {};
+            formData.forEach((v, k) => {
+                result[k] = v;
+            });
+            result.body = editor.getData();
+            console.log(result);
+        });
+    });
+</script>
 </body>
 </html>
