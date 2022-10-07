@@ -1,0 +1,223 @@
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+    <script src="../js/ckeditor.js"></script>
+    <script src="editor.js"></script>
+    <script src="hashtag.js"></script>
+    <script src="theme.js"></script>
+    <script src="cover.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../css/jquery-ui.min.css">
+</head>
+<body>
+<main>
+    <form>
+        <section class="blk-title">
+            <input type="text" placeholder="タイトル" name="title">
+        </section>
+        <section class="blk-body">
+            <textarea id="js-editor" name="body" placeholder="本文" style="visibility: hidden; display: none;"></textarea>
+            <section class="word-count" id="js-word-count"></section>
+        </section>
+
+        <section class="blk-hashtag">
+            <h2 class="hashtag-title">#ハッシュタグ</h2>
+            <button type="button" id="js-edit-hashtag-btn" class="hashtag-btn">
+                <div class="hashtag-list-wrapper">
+                    <div class="hashtag-list" id="js-hashtag-list">
+                        #AAA #BBB
+                    </div>
+                </div>
+            </button>
+            <input type="hidden" name="hashtag" value="AAA BBB">
+        </section>
+
+        <div class="under-module">
+            
+            <section class="blk-theme">
+                <div class="theme-head">
+                    <h2 class="theme-title">テーマ</h2>
+                    <div>
+                        <button type="button" class="theme-add-btn" id="js-theme-add-btn">
+                            +新規作成
+                        </button>
+                    </div>
+                </div>
+                <div class="theme-select">
+                    <select name="theme" id="js-theme-select" class="theme-select-input">
+                        <option value="旅行" selected="">旅行</option>
+                        <option value="暮らし">暮らし</option>
+                        <option value="グルメ">グルメ</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="blk-cover">
+                <div class="cover-head">
+                    <h2 class="cover-title">カバー</h2>
+                    <a href="javascript:void(0);" id="js-cover-help" tabindex="-1">
+                        <i class="question-mark"></i>
+                    </a>
+                    <div id="js-cover-help-balloon" class="cover-help-balloon">
+                        カバーを工夫すると、ブログを見てもらいやすくなります。
+                        <button type="button" id="js-cover-help-balloon-close" class="cover-help-balloon-close">x</button>
+                    </div>
+                </div>
+                <div id="js-cover-content" class="cover-content">
+                    <img id="js-cover-preview" class="cover-preview" src="">
+                    <button type="button" id="js-cover-upload-btn" class="cover-content-btn cover-upload-btn">
+                        画像を選択
+                    </button>
+                    <input type="file" name="cover" accept="image/*" style="display:none">
+                    <button type="button" id="js-cover-delete-btn" class="cover-content-btn cover-delete-btn">
+                       ｘ選択を取消
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <div class="under-module">
+            <section class="blk-publishedAt">
+                <h2 class="publishedAt-title">投稿日時</h2>
+                <div class="publishedAt-select">
+                    <input type="datetime-local" name="publishedAt" class="publishedAt-select-input">
+                </div>
+            </section>
+
+            <section class="blk-configs">
+
+                <div class="config">
+                    <h2 class="config-title">コメント</h2>
+                    <div class="config-check">
+                        <input type="checkbox" name="deny_comment" id="commentFlg" value="1">
+                        <label for="commentFlg">受け付けない</label>
+                    </div>
+                </div>
+
+                <div class="config">
+                    <h2 class="config-title">リブログ</h2>
+                    <div class="config-check">
+                        <input type="checkbox" name="reblog" id="reblogFlg" value="1">
+                        <label for="reblogFlg">受け付けない</label>
+                    </div>
+                </div>
+
+                <div class="config">
+                    <h2 class="config-title">公開範囲</h2>
+                    <div class="config-check">
+                        <input type="checkbox" name="amember" id="amemberFlg" value="1">
+                        <label for="amemberFlg">アメンバー限定</label>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+
+        <footer class="footer">
+            <div class="submit-container">
+                <button class="submit submit__draft">下書き保存</button>
+                <button class="submit submit__post">投稿する</button>
+            </div>
+        </footer>
+    </form>
+</main>
+
+<div class="modal-wrapper" id="js-hashtag-modal">
+    <div class="hashtag-modal">
+        <a href="javascript:void(0);" class="hashtag-modal-close" id="js-hashtag-modal-close">x</a>
+
+        <h3 class="hashtag-modal-title">ハッシュタグ編集</h3>
+        <div class="hashtag-modal-box">
+            <h4 class="hashtag-modal-subtitle">
+                ハッシュタグ（あと
+                <span id="js-hashtag-modal-length">8</span>
+                個）
+            </h4>
+            <div id="js-hashtag-modal-tagList" class="hashtag-modal-tagList"
+                 data-template="&lt;li class=&quot;js-hashtag-modal-tagList-item&quot; data-tag=&quot;__TAG__&quot;&gt;
+                        &lt;div class=&quot;hashtag-modal-hashtagList-item-wrapper&quot;&gt;
+                            &lt;div class=&quot;hashtag-modal-hashtagList-item&quot;&gt;
+                                &lt;span&gt;#__TAG__&lt;/span&gt;
+                                &lt;button type=&quot;button&quot; class=&quot;hashtag-modal-delete js-hashtag-modal-delete&quot;&gt;×&lt;/button&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/li&gt;">
+                <!--                    <li class="js-hashtag-modal-tagList-item" data-tag="__TAG__">-->
+                <!--                        <div class="hashtag-modal-hashtagList-item-wrapper">-->
+                <!--                            <div class="hashtag-modal-hashtagList-item">-->
+                <!--                                <span>#__TAG__</span>-->
+                <!--                                <button type="button" class="hashtag-modal-delete js-hashtag-modal-delete">×</button>-->
+                <!--                            </div>-->
+                <!--                        </div>-->
+                <!--                    </li>-->
+                <ul>
+                    <li>
+                        <div class="hashtag-modal-inputBox" id="js-hashtag-modal-input">
+                            <input type="text" placeholder="入力する" maxlength="30" autocomplete="off">
+<!--                            <div id="js-autocomplete" class="hashtag-modal-autoComplete">-->
+<!--                                <ul class="hashtag-modal-autoComplete__list">-->
+<!--                                    <li class="p-hashtag__modal__autoComplete__list__item">-->
+<!--                                        <a href="javascript:void(0)" class="p-hashtag__modal__autoComplete__list__item__link js-autocomplete" data-tag="多賀城">-->
+<!--                                            多賀城&nbsp;(5,811件)-->
+<!--                                        </a>-->
+<!--                                    </li>-->
+<!--                                    <li class="p-hashtag__modal__autoComplete__list__item">-->
+<!--                                        <a href="javascript:void(0)" class="p-hashtag__modal__autoComplete__list__item__link js-autocomplete" data-tag="多賀城">-->
+<!--                                            多賀城&nbsp;(5,811件)-->
+<!--                                        </a>-->
+<!--                                    </li>-->
+<!--                                    <li class="p-hashtag__modal__autoComplete__list__item">-->
+<!--                                        <a href="javascript:void(0)" class="p-hashtag__modal__autoComplete__list__item__link js-autocomplete" data-tag="多賀城">-->
+<!--                                            多賀城aaaaaa&nbsp;(5,811件)-->
+<!--                                        </a>-->
+<!--                                    </li>-->
+<!--                                </ul>-->
+<!--                            </div>-->
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div><p id="js-hashtag-input-error" class="hashtag-modal-input__error"></p></div>
+
+            <h4 class="hashtag-modal-subtitle">最近よく使うハッシュタグ</h4>
+            <div class="hashtag-modal-tagList">
+                <ul>
+                    <li class="js-hashtag-modal-history-item" data-tag="AAA">
+                        <div class="hashtag-modal-hashtagList-item-wrapper">
+                            <button type="button" class="hashtag-modal-hashtagList-item hashtag-modal-history-item js-hashtag-modal-history-add">
+                                #AAA
+                            </button>
+                        </div>
+                    </li>
+                    <li class="js-hashtag-modal-history-item" data-tag="CCC">
+                        <div class="hashtag-modal-hashtagList-item-wrapper">
+                            <button type="button" class="hashtag-modal-hashtagList-item hashtag-modal-history-item js-hashtag-modal-addFromHistory">
+                                #CCC
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <button type="button" class="hashtag-modal-save-btn" id="js-hashtag-modal-save-btn">決定</button>
+    </div>
+</div>
+
+<div class="modal-wrapper" id="js-theme-modal">
+    <div class="theme-modal">
+        <a href="javascript:void(0);" class="theme-modal-close-btn" id="js-theme-modal-close-btn">x</a>
+
+        <h3 class="theme-modal-title">テーマの作成</h3>
+        <input type="text" maxlength="20" placeholder="テーマ名を入力してください"
+               class="theme-modal-input" id="js-theme-modal-input">
+        <div class="theme-modal-error" id="js-theme-modal-error"></div>
+
+        <button type="button" class="theme-modal-save-btn" id="js-theme-modal-save-btn">追加</button>
+    </div>
+</div>
+
+</body>
+</html>
